@@ -1,0 +1,28 @@
+services:
+  # Main Streamlit application
+  app:
+    build: .
+    container_name: talentscout-app
+    ports:
+      - "8501:8501"
+    environment:
+      - GROQ_API_KEY=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
+      - MONGODB_URI=mongodb+srv://saip00519:hqicJwS5iFsswYFF@cluster0.ul56bs8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - talentscout-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  talentscout-network:
+    driver: bridge
